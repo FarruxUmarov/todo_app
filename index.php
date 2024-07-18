@@ -1,32 +1,31 @@
 <?php
 
 require 'DB.php';
+require 'todo.php';
 
 $pdo = DB::connect();
-$status = false;
+$todo = new Todo($pdo);
 
-$stmt = $pdo->prepare("INSERT INTO todos(text, status) VALUES(:text, :status)");
-$stmt->bindParam(':text', $_POST['text']);
-$stmt->bindParam(':status', $status, PDO::PARAM_BOOL);
-$stmt->execute();
-// header("location: index.php");
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['text'])) {
+        $text = $_POST['text'];
+        $todo->setTodo($text);
+    }
+    header('location: index.php');
+    exit();
+}
 
-$todoList = $pdo->query("SELECT * FROM todos")->fetchAll(PDO::FETCH_ASSOC);
+$todoList = $todo->getTodo();
+
+if(!empty($_GET)){
+    if(isset($_GET['delete'])){
+        $todo->Delete($_GET['delete']);
+    }
+    
+    if(isset($_GET['update'])){
+        $todo->Update($_GET['update']);
+    }
+}
+
+require 'view.php';
 ?>
-
-<ul>
-    <?php 
-    foreach ($todoList as $item):
-    echo "<li>{$item['text']}</li>";
-    endforeach; ?>
-</ul>
-
-<form action="index.php" method="post">
-    <input type="checkbox" name="checkbox">
-    <input type="text" name="text">
-    <button type="Submit">Submit</button>
-
-</form>
-
-
-
