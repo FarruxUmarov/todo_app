@@ -1,31 +1,37 @@
 <?php
 
-require 'DB.php';
-require 'todo.php';
+require 'vendor/autoload.php';
 
-$pdo = DB::connect();
-$todo = new Todo($pdo);
+$update = json_decode(file_get_contents('php://input'));
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['text'])) {
-        $text = $_POST['text'];
-        $todo->setTodo($text);
+if (isset($update)){
+    require 'bot/bot.php';
+    return;
+}
+require 'src/DB.php';
+
+require 'src/Todo.php';
+
+require 'src/User.php';
+
+$todo = new Todo();
+
+if (!empty($_POST)){
+    if (strlen($_POST['text'])){
+        $todo->setTodo($_POST['text']);
+        header('Location: index.php');
     }
-    header('location: index.php');
-    exit();
 }
 
-$todoList = $todo->getTodo();
-
-if(!empty($_GET)){
-    if(isset($_GET['delete'])){
-        $todo->Delete($_GET['delete']);
-    }
-    
-    if(isset($_GET['update'])){
+if (!empty($_GET)){
+    if (isset($_GET['update'])){
         $todo->Update($_GET['update']);
     }
+
+    if (isset($_GET['delete'])){
+        $todo->Delete($_GET['delete']);
+    }
 }
 
-require 'view.php';
+require 'view/view.php';
 ?>

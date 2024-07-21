@@ -1,11 +1,6 @@
 <?php
 
-class Todo{
-    private $pdo;
-
-    public function __construct(PDO $pdo){
-        $this->pdo = $pdo;
-    }
+class Todo extends DB {
 
     public function setTodo(string $todoName){
         $status = false;
