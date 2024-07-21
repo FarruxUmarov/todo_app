@@ -2,6 +2,7 @@
 
 use GuzzleHttp\Client;
 
+require 'bot/bot.php';
 
 class Bot {
 
@@ -41,7 +42,6 @@ class Bot {
                 'text' => $text
             ]
         ]);
-        echo "ok";
         print_r($post->getBody()->getContents());
     }
 

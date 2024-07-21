@@ -17,5 +17,5 @@ if ($update->message){
 
         $bot->addHandlerCommand($chat_id);
     }
-    // $bot->echoBot($chat_id, $text);
+    $bot->echoBot($chat_id, $text);
 }
